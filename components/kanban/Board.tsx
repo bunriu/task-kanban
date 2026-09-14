@@ -4,12 +4,9 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import { TASK_STATUSES, type Task } from "@/types/task";
 import { Column } from "@/components/kanban/Column";
-import { TaskForm } from "@/components/kanban/TaskForm";
+import { TaskFormDialog, type FormTarget } from "@/components/kanban/TaskFormDialog";
 import { DeleteConfirmDialog } from "@/components/kanban/DeleteConfirmDialog";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-
-type FormTarget = { mode: "create" } | { mode: "edit"; task: Task };
 
 export function Board({ tasks }: { tasks: Task[] }) {
   const [formTarget, setFormTarget] = useState<FormTarget | null>(null);
@@ -37,25 +34,11 @@ export function Board({ tasks }: { tasks: Task[] }) {
       </div>
 
       {formTarget && (
-        <Dialog
-          open
-          onOpenChange={(next) => {
-            if (!next) setFormTarget(null);
-          }}
-        >
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>
-                {formTarget.mode === "create" ? "タスクを追加" : "タスクを編集"}
-              </DialogTitle>
-            </DialogHeader>
-            <TaskForm
-              mode={formTarget.mode}
-              task={formTarget.mode === "edit" ? formTarget.task : undefined}
-              onClose={() => setFormTarget(null)}
-            />
-          </DialogContent>
-        </Dialog>
+        <TaskFormDialog
+          target={formTarget}
+          open={true}
+          onClose={() => setFormTarget(null)}
+        />
       )}
 
       {deleteTarget && (
