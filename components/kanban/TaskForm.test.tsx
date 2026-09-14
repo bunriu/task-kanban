@@ -35,7 +35,7 @@ describe("TaskForm", () => {
 
     expect(screen.getByLabelText("タイトル")).toHaveValue("");
     expect(screen.getByLabelText("説明")).toHaveValue("");
-    expect(screen.getByLabelText("ステータス")).toHaveValue("todo");
+    expect(screen.getByLabelText("ステータス")).toHaveTextContent("未着手");
   });
 
   it("pre-fills fields from the task in edit mode", () => {
@@ -43,7 +43,7 @@ describe("TaskForm", () => {
 
     expect(screen.getByLabelText("タイトル")).toHaveValue("Existing task");
     expect(screen.getByLabelText("説明")).toHaveValue("Existing description");
-    expect(screen.getByLabelText("ステータス")).toHaveValue("in_progress");
+    expect(screen.getByLabelText("ステータス")).toHaveTextContent("進行中");
   });
 
   it("submits via createTask in create mode", async () => {

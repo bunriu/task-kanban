@@ -3,6 +3,11 @@
 import { useActionState, useEffect } from "react";
 import { createTask, updateTask, type TaskFormState } from "@/app/actions/tasks";
 import { TASK_STATUSES, TASK_STATUS_LABELS, type Task } from "@/types/task";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const initialState: TaskFormState = {};
 
@@ -27,63 +32,57 @@ export function TaskForm({
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
-      <div className="flex flex-col gap-1">
-        <label htmlFor="task-title">タイトル</label>
-        <input
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="task-title">タイトル</Label>
+        <Input
           id="task-title"
           name="title"
           type="text"
           required
           maxLength={200}
           defaultValue={task?.title ?? ""}
-          className="rounded border border-zinc-300 px-2 py-1 dark:border-zinc-700 dark:bg-zinc-900"
         />
       </div>
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="task-description">説明</label>
-        <textarea
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="task-description">説明</Label>
+        <Textarea
           id="task-description"
           name="description"
           maxLength={2000}
           defaultValue={task?.description ?? ""}
-          className="rounded border border-zinc-300 px-2 py-1 dark:border-zinc-700 dark:bg-zinc-900"
         />
       </div>
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="task-status">ステータス</label>
-        <select
-          id="task-status"
-          name="status"
-          defaultValue={task?.status ?? "todo"}
-          className="rounded border border-zinc-300 px-2 py-1 dark:border-zinc-700 dark:bg-zinc-900"
-        >
-          {TASK_STATUSES.map((status) => (
-            <option key={status} value={status}>
-              {TASK_STATUS_LABELS[status]}
-            </option>
-          ))}
-        </select>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="task-status">ステータス</Label>
+        <Select name="status" defaultValue={task?.status ?? "todo"} items={TASK_STATUS_LABELS}>
+          <SelectTrigger id="task-status" className="w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {TASK_STATUSES.map((status) => (
+              <SelectItem key={status} value={status}>
+                {TASK_STATUS_LABELS[status]}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {state.error && (
-        <p role="alert" className="text-sm text-red-600 dark:text-red-400">
+        <p role="alert" className="text-sm text-destructive">
           {state.error}
         </p>
       )}
 
-      <div className="flex justify-end gap-2">
-        <button type="button" onClick={onClose} className="rounded px-3 py-1">
+      <div className="flex justify-end gap-2 pt-2">
+        <Button type="button" variant="outline" onClick={onClose}>
           キャンセル
-        </button>
-        <button
-          type="submit"
-          disabled={pending}
-          className="rounded bg-zinc-900 px-3 py-1 text-white dark:bg-zinc-50 dark:text-zinc-900"
-        >
+        </Button>
+        <Button type="submit" disabled={pending}>
           保存
-        </button>
+        </Button>
       </div>
     </form>
   );

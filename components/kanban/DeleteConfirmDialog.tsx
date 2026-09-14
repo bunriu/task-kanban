@@ -2,6 +2,15 @@
 
 import { deleteTask } from "@/app/actions/tasks";
 import type { Task } from "@/types/task";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export function DeleteConfirmDialog({
   task,
@@ -15,26 +24,35 @@ export function DeleteConfirmDialog({
   if (!open) return null;
 
   return (
-    <dialog
+    <Dialog
       open
-      className="rounded border border-zinc-300 p-4 dark:border-zinc-700 dark:bg-zinc-900"
+      onOpenChange={(next) => {
+        if (!next) onClose();
+      }}
     >
-      <p>「{task.title}」を削除しますか?この操作は取り消せません。</p>
-      <div className="mt-4 flex justify-end gap-2">
-        <button type="button" onClick={onClose} className="rounded px-3 py-1">
-          キャンセル
-        </button>
-        <form
-          action={async () => {
-            await deleteTask(task.id);
-            onClose();
-          }}
-        >
-          <button type="submit" className="rounded bg-red-600 px-3 py-1 text-white">
-            削除
-          </button>
-        </form>
-      </div>
-    </dialog>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>タスクを削除しますか?</DialogTitle>
+          <DialogDescription>
+            「{task.title}」を削除しますか?この操作は取り消せません。
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button type="button" variant="outline" onClick={onClose}>
+            キャンセル
+          </Button>
+          <form
+            action={async () => {
+              await deleteTask(task.id);
+              onClose();
+            }}
+          >
+            <Button type="submit" variant="destructive">
+              削除
+            </Button>
+          </form>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

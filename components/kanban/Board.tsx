@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { Plus } from "lucide-react";
 import { TASK_STATUSES, type Task } from "@/types/task";
 import { Column } from "@/components/kanban/Column";
 import { TaskForm } from "@/components/kanban/TaskForm";
 import { DeleteConfirmDialog } from "@/components/kanban/DeleteConfirmDialog";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 type FormTarget = { mode: "create" } | { mode: "edit"; task: Task };
 
@@ -15,16 +18,13 @@ export function Board({ tasks }: { tasks: Task[] }) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-end">
-        <button
-          type="button"
-          onClick={() => setFormTarget({ mode: "create" })}
-          className="rounded bg-zinc-900 px-3 py-1.5 text-sm text-white dark:bg-zinc-50 dark:text-zinc-900"
-        >
-          + タスクを追加
-        </button>
+        <Button type="button" onClick={() => setFormTarget({ mode: "create" })}>
+          <Plus />
+          タスクを追加
+        </Button>
       </div>
 
-      <div className="flex flex-col gap-4 sm:flex-row">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
         {TASK_STATUSES.map((status) => (
           <Column
             key={status}
@@ -37,25 +37,33 @@ export function Board({ tasks }: { tasks: Task[] }) {
       </div>
 
       {formTarget && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-lg bg-white p-4 dark:bg-zinc-900">
+        <Dialog
+          open
+          onOpenChange={(next) => {
+            if (!next) setFormTarget(null);
+          }}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>
+                {formTarget.mode === "create" ? "タスクを追加" : "タスクを編集"}
+              </DialogTitle>
+            </DialogHeader>
             <TaskForm
               mode={formTarget.mode}
               task={formTarget.mode === "edit" ? formTarget.task : undefined}
               onClose={() => setFormTarget(null)}
             />
-          </div>
-        </div>
+          </DialogContent>
+        </Dialog>
       )}
 
       {deleteTarget && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40 p-4">
-          <DeleteConfirmDialog
-            task={deleteTarget}
-            open={true}
-            onClose={() => setDeleteTarget(null)}
-          />
-        </div>
+        <DeleteConfirmDialog
+          task={deleteTarget}
+          open={true}
+          onClose={() => setDeleteTarget(null)}
+        />
       )}
     </div>
   );

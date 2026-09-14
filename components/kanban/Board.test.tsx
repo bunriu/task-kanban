@@ -64,7 +64,7 @@ describe("Board", () => {
     const user = userEvent.setup();
     render(<Board tasks={tasks} />);
 
-    await user.click(screen.getByRole("button", { name: "+ タスクを追加" }));
+    await user.click(screen.getByRole("button", { name: "タスクを追加" }));
 
     expect(screen.getByLabelText("タイトル")).toBeInTheDocument();
   });

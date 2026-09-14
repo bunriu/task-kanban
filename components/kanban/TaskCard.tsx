@@ -1,6 +1,9 @@
 "use client";
 
+import { Pencil, Trash2 } from "lucide-react";
 import type { Task } from "@/types/task";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function TaskCard({
   task,
@@ -12,19 +15,31 @@ export function TaskCard({
   onDelete: (task: Task) => void;
 }) {
   return (
-    <div className="rounded border border-zinc-300 bg-white p-3 dark:border-zinc-700 dark:bg-zinc-900">
-      <h3 className="font-medium text-zinc-900 dark:text-zinc-50">{task.title}</h3>
+    <Card size="sm" className="transition-shadow hover:shadow-md">
+      <CardHeader>
+        <CardTitle className="text-sm">{task.title}</CardTitle>
+      </CardHeader>
       {task.description && (
-        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{task.description}</p>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">{task.description}</p>
+        </CardContent>
       )}
-      <div className="mt-3 flex justify-end gap-2 text-sm">
-        <button type="button" onClick={() => onEdit(task)} className="text-zinc-600 dark:text-zinc-400">
+      <CardFooter className="justify-end gap-1">
+        <Button type="button" variant="ghost" size="sm" onClick={() => onEdit(task)}>
+          <Pencil />
           編集
-        </button>
-        <button type="button" onClick={() => onDelete(task)} className="text-red-600 dark:text-red-400">
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+          onClick={() => onDelete(task)}
+        >
+          <Trash2 />
           削除
-        </button>
-      </div>
-    </div>
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }
